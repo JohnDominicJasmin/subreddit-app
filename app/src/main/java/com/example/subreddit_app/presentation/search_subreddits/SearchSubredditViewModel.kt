@@ -70,7 +70,7 @@ class SearchSubredditViewModel @Inject constructor(
                 redditUseCase.searchSubredditUseCase(accessToken, query)
 
             }.onSuccess { result ->
-                _state.update { it.copy(subredditSearchModel = result) }
+                _state.update { it.copy(subredditSearchModel = result, isLoading = false, error = null) }
             }.onFailure { error ->
                 _state.update { it.copy(error = error.message, isLoading = false) }
             }
