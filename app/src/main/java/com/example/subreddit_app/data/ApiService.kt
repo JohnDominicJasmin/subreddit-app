@@ -16,5 +16,5 @@ interface ApiService {
         @Field("grant_type") grantType: String = "password", // Using 'password' grant type for username and password
         @Field("username") username: String,
         @Field("password") password: String
-    ): Response<TokenResponseDto>
+    ): TokenResponseDto
 }

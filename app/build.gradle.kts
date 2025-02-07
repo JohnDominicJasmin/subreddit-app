@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.test.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -130,7 +131,10 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     testImplementation("com.google.truth:truth:1.1")
-
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation ("androidx.compose.foundation:foundation:1.7.7")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
 }
 
 kapt {

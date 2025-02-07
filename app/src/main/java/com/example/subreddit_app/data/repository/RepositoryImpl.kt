@@ -4,8 +4,17 @@ import android.util.Base64
 import com.example.subreddit_app.BuildConfig
 import com.example.subreddit_app.data.ApiService
 import com.example.subreddit_app.data.OauthApiService
+import com.example.subreddit_app.data.data_source.local.NetworkConnectivity
 import com.example.subreddit_app.data.mapper.RedditMapper.mapToken
-import com.example.subreddit_app.domain.model.TokenResponseModel
+import com.example.subreddit_app.data.mapper.RedditMapper.toSubredditDetails
+import com.example.subreddit_app.data.mapper.RedditMapper.toPopularSubreddits
+import com.example.subreddit_app.data.mapper.RedditMapper.toSubredditInfoModel
+import com.example.subreddit_app.data.mapper.RedditMapper.toSubredditSearch
+import com.example.subreddit_app.domain.model.popular_subreddit.PopularSubredditsModel
+import com.example.subreddit_app.domain.model.subreddit_details.SubredditDetailsModel
+import com.example.subreddit_app.domain.model.search.SubredditSearchModel
+import com.example.subreddit_app.domain.model.auth.TokenResponseModel
+import com.example.subreddit_app.domain.model.subreddit_details.SubredditInfoModel
 import com.example.subreddit_app.domain.repository.Repository
 
 class RepositoryImpl (private val api: ApiService, private val oauthApi: OauthApiService) : Repository{
@@ -23,7 +32,35 @@ class RepositoryImpl (private val api: ApiService, private val oauthApi: OauthAp
             authorization = authHeader,
             username = username,
             password = password
-        ).body()
-        return result?.mapToken() ?: throw Exception("Error refreshing access token")
+        )
+        return result.mapToken() ?: throw Exception("Error refreshing access token")
     }
+    private fun getAuthorization(accessToken: String) = "Bearer $accessToken"
+    override suspend fun getPopularSubreddits(accessToken: String): PopularSubredditsModel {
+        val authorization = getAuthorization(accessToken)
+        return oauthApi.getPopularSubreddits(authorization).toPopularSubreddits()
+    }
+
+    override suspend fun searchSubreddits(accessToken: String, query: String): SubredditSearchModel {
+        val authorization = getAuthorization(accessToken)
+        return oauthApi.searchSubreddits(authorization, query = query).toSubredditSearch()
+    }
+
+    override suspend fun getSubredditDetails(
+        accessToken: String,
+        subreddit: String): SubredditDetailsModel {
+        val authorization = getAuthorization(accessToken)
+
+        return oauthApi.getSubredditDetails(authorization = authorization, subreddit = subreddit).toSubredditDetails()
+    }
+
+    override suspend fun getSubredditInfo(
+        accessToken: String,
+        subreddit: String): SubredditInfoModel {
+
+        val authorization = getAuthorization(accessToken)
+        return oauthApi.getSubredditInfo(authorization = authorization, subreddit = subreddit).toSubredditInfoModel()
+
+    }
+
 }
